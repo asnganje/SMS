@@ -19,7 +19,8 @@ exports.login = async (req, res) => {
         if(!bcrypt.compareSync(password, user.password)) return res.status(401).json({message: "Wrong password submitted"})
 
 
-        // generate auth token
+        // return user 
+''
         return res.send(user)
     }
 
