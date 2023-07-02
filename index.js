@@ -1,6 +1,5 @@
 const express = require('express')
 const config = require('./config/app')
-// require('dotenv').config()
 const router = require('./router')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -20,4 +19,3 @@ app.listen(port, () => {
     console.log(`Listen on port no ${port}`)
 })
 
-console.log('Hello World!')

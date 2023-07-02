@@ -1,5 +1,6 @@
 const User = require('../models').User;
 const bcrypt = require('bcrypt')
+
 exports.login = async (req, res) => {
     const {email, password} = req.body;
 
@@ -36,7 +37,7 @@ exports.register = async (req,res) => {
     try{
         const user = await User.create(req.body)
         return res.send(user)
-
+        
     }  
     catch(e) {
         return res.status(500).json({message: e.message})
