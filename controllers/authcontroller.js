@@ -17,7 +17,9 @@ exports.login = async (req, res) => {
 
        
         // check if password provided matches
-        if(!bcrypt.compareSync(password, user.password)) return res.status(401).json({message: "Wrong password submitted"})
+        if(password !== user.password) {
+            return res.status(401).json({message: "Wrong password submitted"})
+        } 
 
 
         // return user 
@@ -33,11 +35,22 @@ exports.login = async (req, res) => {
 
 }
 
-exports.register = async (req,res) => {
+exports.register = async (req, res) => {
     try{
-        const user = await User.create(req.body)
+    
+    const avatar = req.body.avatar || 'meee'; 
+    const {firstName, lastName, email, password, gender} = req.body.user
+
+
+    const user = await User.create({
+        firstName,
+        lastName,
+        email,
+        password,
+        gender,
+        avatar
+        });
         return res.send(user)
-        
     }  
     catch(e) {
         return res.status(500).json({message: e.message})
