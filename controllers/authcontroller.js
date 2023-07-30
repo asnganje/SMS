@@ -1,5 +1,6 @@
 const User = require('../models').User;
 const bcrypt = require('bcrypt')
+const { Pool } = require('pg');
 
 exports.login = async (req, res) => {
     const {email, password} = req.body;
@@ -23,7 +24,7 @@ exports.login = async (req, res) => {
 
 
         // return user 
-''
+
         return res.send(user)
     }
 
@@ -55,4 +56,30 @@ exports.register = async (req, res) => {
     catch(e) {
         return res.status(500).json({message: e.message})
     }
+}
+
+
+const pool = new Pool({
+    user: 'postgres',
+    database: 'school_db',
+    password: 'nodimon',
+    port: 5432, // Default PostgreSQL port
+    idleTimeoutMillis: 0,
+    connectionTimeoutMillis: 0
+  });
+
+exports.loader = async (req, res) => {
+    
+    try{
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM "Users"');
+        const users = result.rows;
+        client.release();
+        res.json(users);
+    }
+
+    catch(e) {
+        return res.status(500).json({message: e.message})        
+    }
+
 }
