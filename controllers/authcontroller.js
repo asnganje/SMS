@@ -1,4 +1,6 @@
 const User = require('../models').User;
+const Parent = require('../models').Parent;
+
 const bcrypt = require('bcrypt')
 const { Pool } = require('pg');
 
@@ -36,6 +38,7 @@ exports.login = async (req, res) => {
 
 }
 
+// register user
 exports.register = async (req, res) => {
     try{
     
@@ -58,6 +61,7 @@ exports.register = async (req, res) => {
     }
 }
 
+// prepare and load users 
 
 const pool = new Pool({
     user: 'postgres',
@@ -82,4 +86,41 @@ exports.loader = async (req, res) => {
         return res.status(500).json({message: e.message})        
     }
 
+}
+
+
+// add parent to database
+
+exports.parent = async (req, res) => {
+    try {
+        // console.log(req.body)
+        const { firstName, lastName, email, contact, relationship } = req.body.parent
+        
+        const parent = await Parent.create({
+            firstName,
+            lastName,
+            email,
+            contact,
+            relationship
+        })
+        return res.send(parent)
+    } 
+    
+    catch (e) {
+        return res.status(500).json({message: e.message})       
+    }
+}
+
+// load parents
+exports.loader1 = async (req,res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * from "Parents"')
+        const parents = result.rows
+        client.release()
+        res.json(parents)
+        
+    } catch (e) {
+        res.status(500).json({message: e.message})
+    }
 }
